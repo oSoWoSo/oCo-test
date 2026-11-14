@@ -177,3 +177,18 @@ jobs:
           fi
           git commit -m "bump.sh: ${{ inputs.group }}"
           git push origin HEAD:${GITHUB_REF_NAME}
+      - name: Write job summary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "## bump.sh: ${{ inputs.group }}"
+            echo ""
+            echo "- bump: ${{ inputs.bump }}"
+            echo "- lint: ${{ inputs.lint }}"
+            echo "- build: ${{ inputs.build }}"
+            echo "- copy: ${{ inputs.copy }}"
+            echo "- order: ${{ inputs.order }}"
+            echo "- record_order: ${{ inputs.record_order }}"
+            echo "- arch: ${{ inputs.xbps_target_arch }}"
+          } >> "$GITHUB_STEP_SUMMARY"
