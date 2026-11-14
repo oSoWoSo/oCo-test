@@ -8,32 +8,32 @@ on:
         required: true
         type: string
       bump:
-        description: 'Bump all group packages (u/--bump)'
+        description: 'Bump (u/--bump)'
         required: false
         default: false
         type: boolean
       lint:
-        description: 'Lint all group packages (l/--lint)'
+        description: 'Lint (l/--lint)'
         required: false
         default: false
         type: boolean
       build:
-        description: 'Build all group packages (b/--build)'
+        description: 'Build (b/--build)'
         required: false
         default: false
         type: boolean
       copy:
-        description: 'Copy templates + subpackages (c/--copy)'
+        description: 'Copy templates (c/--copy)'
         required: false
         default: false
         type: boolean
       order:
-        description: 'Show build order only (o/--order)'
+        description: 'Show build order (o/--order)'
         required: false
         default: false
         type: boolean
       record_order:
-        description: 'Record successful build order (r/--record-order)'
+        description: 'Record build order (r/--record-order)'
         required: false
         default: false
         type: boolean
