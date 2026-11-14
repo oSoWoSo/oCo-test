@@ -145,7 +145,7 @@ jobs:
           fi
           printf 'Running: ./bump.sh %s\n' "${args[*]}"
           ./bump.sh "${args[@]}"
-
+      - name: Commit and push changes
         shell: bash
         run: |
           set -euo pipefail
