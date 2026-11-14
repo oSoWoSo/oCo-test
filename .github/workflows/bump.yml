@@ -86,6 +86,7 @@ jobs:
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.BOT }}
+      options: --privileged
     defaults:
       run:
         working-directory: extra
