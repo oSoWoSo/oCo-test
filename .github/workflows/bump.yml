@@ -110,6 +110,15 @@ jobs:
           git config --global --add safe.directory /void-packages
           git config --global --add safe.directory '*'
 
+      - name: Require at least one operation
+        run: |
+          if [ "${{ inputs.bump }}" != "true" ] && [ "${{ inputs.lint }}" != "true" ] && \
+             [ "${{ inputs.build }}" != "true" ] && [ "${{ inputs.copy }}" != "true" ] && \
+             [ "${{ inputs.order }}" != "true" ] && [ "${{ inputs.record_order }}" != "true" ]; then
+            echo "::error::select at least one operation flag"
+            exit 1
+          fi
+
       - name: Merge templates into void-packages
         run: bash "${GITHUB_WORKSPACE}/extra/.github/scripts/ci/build-merge-templates.sh"
         working-directory: ${{ github.workspace }}
@@ -124,14 +133,6 @@ jobs:
           echo "sourceDir=$srcdir" >> "$GITHUB_OUTPUT"
           echo "destinationDir=$destdir" >> "$GITHUB_OUTPUT"
 
-      - name: Require at least one operation
-        run: |
-          if [ "${{ inputs.bump }}" != "true" ] && [ "${{ inputs.lint }}" != "true" ] && \
-             [ "${{ inputs.build }}" != "true" ] && [ "${{ inputs.copy }}" != "true" ] && \
-             [ "${{ inputs.order }}" != "true" ] && [ "${{ inputs.record_order }}" != "true" ]; then
-            echo "::error::select at least one operation flag"
-            exit 1
-          fi
 
       - name: Ensure xxautobump
         shell: bash
