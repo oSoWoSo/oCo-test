@@ -93,6 +93,7 @@ jobs:
       XBPS_TARGET_ARCH: ${{ inputs.xbps_target_arch }}
       XBPS_DISTDIR: ${{ inputs.xbps_distdir }}
       OCO_TOKEN: ${{ secrets.BOT }}
+      XBPS_ALLOW_CHROOT_BREAKOUT: yes
     steps:
       - name: Checkout repo
         uses: actions/checkout@v7
