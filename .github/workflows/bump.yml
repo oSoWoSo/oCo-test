@@ -107,6 +107,12 @@ jobs:
           git config user.email "bot@osowoso.org"
           git config --global user.name "oSoWoSo-bot"
           git config --global user.email "bot@osowoso.org"
+          git config --global --add safe.directory /void-packages
+          git config --global --add safe.directory '*'
+
+      - name: Merge templates into void-packages
+        run: bash .github/scripts/ci/build-merge-templates.sh
+        working-directory: ${{ github.workspace }}
 
       - name: Resolve paths
         id: paths
