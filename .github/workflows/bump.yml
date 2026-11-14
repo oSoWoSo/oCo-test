@@ -4,9 +4,19 @@ on:
   workflow_dispatch:
     inputs:
       group:
-        description: 'Group name (see bump.sh show_packs)'
+        description: 'Group name'
         required: true
-        type: string
+        type: choice
+        options:
+          - cosmic
+          - cosmic-minimal
+          - dux
+          - hypr
+          - nwg
+          - sonic
+          - xlibre
+          - xlibre-minimal
+          - test
       bump:
         description: 'Bump (u/--bump)'
         required: false
