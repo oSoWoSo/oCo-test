@@ -179,7 +179,7 @@ _bump() {
 				fi
 			else
 				_y "No updated version found for $package"
-				SKIPPED+=("$package")
+				SKIPPED+=("$package (bump)")
 			fi
 			rm -f "$output"
 		else
@@ -206,7 +206,6 @@ _bump() {
 			done <<<"$revdeps"
 		fi
 	done
-	_summary
 	if ((failed)); then
 		_r "Bumping done with $failed error(s)"
 		return 1
@@ -226,7 +225,6 @@ _lint() {
 			((failed++))
 		fi
 	done
-	_summary
 	if ((failed)); then
 		_r "Linting done: $failed package(s) failed"
 		return 1
@@ -265,7 +263,6 @@ _build() {
 			return 1
 		fi
 	done
-	_summary
 	_print_built_packages "$_build_marker"
 	rm -f "$_build_marker"
 	_g "Building done"
@@ -292,7 +289,6 @@ _install() {
 			failed=$((failed + 1))
 		fi
 	done
-	_summary
 	if ((failed)); then
 		_r "Installation completed with $failed error(s)"
 		return 1
@@ -459,7 +455,6 @@ _copy() {
 			_sync_shlibs "$sub" || true
 		done < <(_subpackages "$dir" | sort -u)
 	done
-	_summary
 	if ((failed)); then
 		_r "Copying done with $failed error(s)"
 		return 1
@@ -535,6 +530,9 @@ Possible arguments are:
   h OR --help     Show this help message
   a OR --all      bump, build, copy and install
 
+Multiple actions can be combined in one invocation, e.g.:
+  ./bump.sh <group> bump lint build order
+
 You must take care of Shlibs yourself outside of copy!
 To set sourceDir and destinationDir yourself
 Just export them before running script
@@ -570,504 +568,504 @@ fi
 
 # Here add groups with lists
 case "${1}" in
-	cosmic)
-		shift
-		packageList=(
-			xdg-desktop-portal-cosmic
-			cosmic-osk
-			cosmic-viewer
-			cosmic-applibrary
-			cosmic-applets
-			cosmic-bg
-			cosmic-edit
-			cosmic-idle
-			cosmic-monitor
-			cosmic-notifications
-			cosmic-osd
-			cosmic-panel
-			cosmic-player
-			cosmic-screenshot
-			cosmic-settings-daemon
-			cosmic-sound-theme
-			cosmic-term
-			cosmic-wallpapers
-			cosmic-workspaces-epoch
-			blocaled
-			pop-launcher
-			cosmic-icons
-			default-cursors # meta
-			cosmic-randr
-			cosmic-comp
-			cosmic-initial-setup
-			cosmic-launcher
-			cosmic-files
-			cosmic-store
-			cosmic-session
-			cosmic-settings
-			cosmic-greeter
-			cosmic-desktop-minimal # meta
-			cosmic-desktop-full # meta
-		)
-		;;
-	cosmic-minimal)
-		shift
-		packageList=(
-			cosmic-desktop-minimal # meta
-		)
-		;;
-	dux)
-		shift
-		packageList=(
-			dux-qml-common
-			dux-gop
-			dux-calendar
-			dux-search
-			dux-files
-			dux-greeter
-			dux-shell # meta
-		)
-		;;
-	hypr)
-		shift
-		packageList=(
-			hyprland-protocols
-			hyprwayland-scanner
-			hyprutils
-			libspng
-			hyprgraphics
-			hyprlang
-			hyprcursor
-			aquamarine
-			xdg-desktop-portal-hyprland
-			hyprwire
-			hyprtoolkit
-			hyprland-qt-support
-			glaze
-			hyprsysteminfo
-			hyprsunset
-			hyprpolkitagent
-			hyprpicker
-			hyprpaper
-			hyprlock
-			hyprland-guiutils
-			hypridle
-			hyprland # meta
-		)
-		;;
-	nwg)
-		shift
-		packageList=(
-			python3-dasbus
-			python3-geographiclib
-			python3-geopy
-			nwg-bar
-			nwg-clipman
-			nwg-displays
-			nwg-dock
-			nwg-dock-hyprland
-			nwg-drawer
-			nwg-hello
-			nwg-icon-picker
-			nwg-look
-			nwg-menu
-			nwg-panel
-			nwg-readme-browser
-			nwg-shell-config
-			nwg-shell-wallpapers
-			nwg-shell # meta
-		)
-		;;
-	sonic)
-		shift
-		packageList=(
-			sonic-namespace
-			sf-cmake-modules
-			sf-settings
-			sf-text-codec
-			sf-gui-addons
-			sf-internationalization
-			sf-color-scheme
-			sf-core-addons
-			sf-widgets-addons
-			sf-settings-ui
-			sf-archive
-			sf-logging
-			sf-doctools
-			sonic-polkit
-			sf-windowsystem
-			sf-auth
-			sf-bookmarks
-			sf-autocomplete
-			sf-crash-handler
-			sf-dbus
-			sf-silver-icons
-			sf-icon-themes
-			sf-data-views
-			sf-notifications
-			sf-progress-ui
-			sf-app-info
-			sf-keyring
-			sonic-daemon
-			sf-device-integration
-			sf-io
-			sf-keybind
-			sf-xml-gui
-			sf-quick-ui
-			#??
-			sonic-silver
-			sonic-silver-gtk
-			sonic-activity-manager-daemon
-			sf-pseudo-terminal
-			sf-root-shell
-			sf-ui-components
-			sf-qml-bridge
-			sf-holidays
-			sf-idle-tracker
-			sf-quick-desktop-style
-			sf-data-models
-			sf-spell-check
-			sf-quick-ui-addons
-			sonic-pipewire
-			sf-quick-charts
-			sf-status-notification
-			sf-syntax-highlighting
-			sf-text-widgets
-			sf-text-editor
-			sf-user-feedback
-			sonic-exiv2-library
-			sonic-activities-stats
-			sf-barcode
-			sf-file-metadata
-			sf-file-search
-			sf-notification-settings
-			sf-unit-conversion
-			sf-networkmanager
-			sonic-system-monitor-library
-			sonic-plasma5-support-library
-			sf-runner
-			sonic-keybind-daemon
-			sonic-screen-library
-			sonic-night-light
-			sonic-win
-			sf-io-fuse
-			sonic-system-stats
-			sonic-qt-theme-bridge
-			sf-zeroconf
-			sf-io-extras
-			sonic-workspace
-			#??
-			sonic-screen
-			sonic-pulseaudio-library
-			sonic-audio-applet-pulse
-			sonic-desktop-interface
-			sonic-system-info
-			sonic-workspace-addons
-			xdg-desktop-portal-sonicde
-			sonicde-meta # meta
-			#
-			#sonic-activities # ← sf-cmake-modules (shortened to 'scfm')
-			#sonic-activities-stats # ← sfcm sf-settings
-			#sonic-activity-manager-daemon # ← sfcm sf-settings
-			#sf-data-models # ← sfcm
-			#sf-quick-ui # ← sfcm
-			#sonic-audio-applet-pulse # ← sfcm sf-data-models sf-quick-ui
-			#sonic-bluetooth-runtime # ← sfcm sf-quick-ui
-			#sf-silver-icons # ← sfcm
-			#sonic-breeze # ← sfcm sf-silver-icons
-			#sonic-breeze-sddm # ← sfcm
-			#sonic-browser-integration # ← sfcm
-			#sonic-crypto-library
-			#sonic-daemon # ← sfcm
-			#sonic-decoration # ← sfcm
-			#sonic-launcher-menu-edit # ← sfcm
-			#sonic-polkit-agent # ← sfcm
-			#sf-quick-desktop-style # ← sfcm
-			#sonic-desktop-interface # ← sf-quick-desktop-style sonic-launcher-menu-edit sonic-polkit-agent
-			#sonic-disks # ← sfcm
-			#sonic-dr-robotnik # ← sfcm sf-data-models sf-quick-ui
-			#sonic-drawing-tablet # ← sfcm
-			#sf-io-extras # ← sfcm sf-core-addons sf-doctools
-			#sonic-ecco # ← sfcm sf-io-extras
-			#sonic-exiv2-library # ← sfcm
-			#sonic-firewall # ← sfcm
-			#sf-addons-downloader # ← sfcm
-			#sf-app-info # ← sfcm
-			#sf-barcode # ← sfcm
-			#sf-bluetooth # ← sfcm
-			#sf-data-views # ← sfcm
-			#sf-device-integration # ← sfcm
-			#sf-feeds # ← sfcm
-			#sf-file-metadata # ← sfcm
-			#sf-holidays # ← sfcm
-			#sf-icon-themes # ← sfcm
-			#sf-idle-tracker # ← sfcm
-			#sf-image-formats # ← sfcm
-			#sf-io # ← sfcm
-			#sf-io-fuse # ← sfcm
-			#sf-keybind # ← sfcm
-			#sf-keyring # ← sfcm
-			#sf-keyring-pam # ← sfcm
-			#sf-modemmanager # ← sfcm
-			#sf-notifications # ← sfcm
-			#sf-open-collab # ← sfcm
-			#sf-package # ← sfcm sf-doctools
-			#sf-progress-ui # ← sfcm
-			#sf-pseudo-terminal # ← sfcm
-			#sf-qml-bridge # ← sfcm
-			#sf-purpose # ← sf-barcode sfcm sf-data-models sf-qml-bridge
-			#sf-qt-integration # ← sfcm
-			#sf-quick-charts # ← sfcm
-			#sf-quick-ui-addons # ← sfcm sf-core-addons sf-quick-desktop-style sf-quick-ui sf-settings
-			#sf-root-shell # ← sfcm
-			#sf-settings-utils # ← sfcm
-			#sf-spell-check # ← sfcm
-			#sf-sso
-			#sf-status-notification # ← sfcm
-			#sf-svg # ← sfcm
-			#sf-syntax-highlighting # ← sfcm
-			#sf-text-editor # ← sfcm
-			#sf-text-widgets # ← sfcm
-			#sf-ui-components # ← sfcm
-			#sf-user-feedback # ← sfcm
-			#sf-xml-gui # ← sfcm sf-settings
-			#sf-zeroconf # ← sfcm
-			#sonic-terminal-tools # ← sfcm
-			#sonic-gtk-theme-bridge # ← sfcm sonic-terminal-tools
-			#sonic-interface-libraries # ← sf-quick-ui sf-settings
-			#sonic-login-manager # ← sfcm
-			#sonic-network-manager # ← sf-barcode sfcm sf-quick-ui
-			#sonic-night-light # ← sfcm sf-settings
-			#sonic-oxygen # ← sfcm
-			#sonic-oxygen-icons # ← sfcm
-			#sonic-oxygen-sounds # ← sfcm
-			#sonic-partition-manager # ← sf-doctools sf-settings
-			#sonic-pipewire # ← sfcm
-			#sonic-pulseaudio-library # ← sfcm
-			#sonic-qt-accounts-library
-			#sonic-silver # ← sfcm sf-qt-integration sf-silver-icons
-			#sonic-qt-theme-bridge # ← sfcm sf-quick-desktop-style sonic-silver
-			#sonic-quick-image-editor # ← sfcm sf-settings
-			#sonic-rdp # ← sfcm
-			#sonic-screen # ← sfcm sf-image-formats
-			#sonic-screenies # ← sfcm
-			#sonic-screenlocker # ← sfcm
-			#sonic-silver-gtk # ← sfcm sonic-silver
-			#sonic-system-stats # ← sfcm sf-settings
-			#sonic-workspace # ← sonic-activity-manager-daemon sf-io-fuse sonic-qt-theme-bridge sonic-system-stats
-			#sonic-silver-sddm # ← sonic-workspace
-			#sonic-ssh-password-prompt # ← sfcm sf-doctools
-			#sonic-system-info # ← sfcm
-			#sonic-system-log # ← sfcm sf-core-addons sf-doctools sf-settings
-			#sonic-system-monitor # ← sfcm sf-package sf-quick-charts sf-quick-desktop-style sf-quick-ui sonic-system-stats
-			#sonic-terminal # ← sfcm
-			#sonic-thunderbolt # ← sfcm
-			#sonic-win # ← sf-quick-ui sonic-silver
-			#sonic-tv-interface # ← sonic-audio-applet-pulse sfcm sonic-network-manager sonic-screen sonic-terminal-tools sonic-win
-			#sonic-vault # ← sfcm
-			#sonic-workspace-addons # ← sfcm
-			#sonic-workspace-wallpapers # ← sfcm
-			#sonic-write-daemon # ← sfcm
-			#sonicde-meta
-			#xdg-desktop-portal-sonicde # ← sfcm sonic-workspace
+cosmic)
+	shift
+	packageList=(
+		xdg-desktop-portal-cosmic
+		cosmic-osk
+		cosmic-viewer
+		cosmic-applibrary
+		cosmic-applets
+		cosmic-bg
+		cosmic-edit
+		cosmic-idle
+		cosmic-monitor
+		cosmic-notifications
+		cosmic-osd
+		cosmic-panel
+		cosmic-player
+		cosmic-screenshot
+		cosmic-settings-daemon
+		cosmic-sound-theme
+		cosmic-term
+		cosmic-wallpapers
+		cosmic-workspaces-epoch
+		blocaled
+		pop-launcher
+		cosmic-icons
+		default-cursors # meta
+		cosmic-randr
+		cosmic-comp
+		cosmic-initial-setup
+		cosmic-launcher
+		cosmic-files
+		cosmic-store
+		cosmic-session
+		cosmic-settings
+		cosmic-greeter
+		cosmic-desktop-minimal # meta
+		cosmic-desktop-full    # meta
+	)
+	;;
+cosmic-minimal)
+	shift
+	packageList=(
+		cosmic-desktop-minimal # meta
+	)
+	;;
+dux)
+	shift
+	packageList=(
+		dux-qml-common
+		dux-gop
+		dux-calendar
+		dux-search
+		dux-files
+		dux-greeter
+		dux-shell # meta
+	)
+	;;
+hypr)
+	shift
+	packageList=(
+		hyprland-protocols
+		hyprwayland-scanner
+		hyprutils
+		libspng
+		hyprgraphics
+		hyprlang
+		hyprcursor
+		aquamarine
+		xdg-desktop-portal-hyprland
+		hyprwire
+		hyprtoolkit
+		hyprland-qt-support
+		glaze
+		hyprsysteminfo
+		hyprsunset
+		hyprpolkitagent
+		hyprpicker
+		hyprpaper
+		hyprlock
+		hyprland-guiutils
+		hypridle
+		hyprland # meta
+	)
+	;;
+nwg)
+	shift
+	packageList=(
+		python3-dasbus
+		python3-geographiclib
+		python3-geopy
+		nwg-bar
+		nwg-clipman
+		nwg-displays
+		nwg-dock
+		nwg-dock-hyprland
+		nwg-drawer
+		nwg-hello
+		nwg-icon-picker
+		nwg-look
+		nwg-menu
+		nwg-panel
+		nwg-readme-browser
+		nwg-shell-config
+		nwg-shell-wallpapers
+		nwg-shell # meta
+	)
+	;;
+sonic)
+	shift
+	packageList=(
+		sonic-namespace
+		sf-cmake-modules
+		sf-settings
+		sf-text-codec
+		sf-gui-addons
+		sf-internationalization
+		sf-color-scheme
+		sf-core-addons
+		sf-widgets-addons
+		sf-settings-ui
+		sf-archive
+		sf-logging
+		sf-doctools
+		sonic-polkit
+		sf-windowsystem
+		sf-auth
+		sf-bookmarks
+		sf-autocomplete
+		sf-crash-handler
+		sf-dbus
+		sf-silver-icons
+		sf-icon-themes
+		sf-data-views
+		sf-notifications
+		sf-progress-ui
+		sf-app-info
+		sf-keyring
+		sonic-daemon
+		sf-device-integration
+		sf-io
+		sf-keybind
+		sf-xml-gui
+		sf-quick-ui
+		#??
+		sonic-silver
+		sonic-silver-gtk
+		sonic-activity-manager-daemon
+		sf-pseudo-terminal
+		sf-root-shell
+		sf-ui-components
+		sf-qml-bridge
+		sf-holidays
+		sf-idle-tracker
+		sf-quick-desktop-style
+		sf-data-models
+		sf-spell-check
+		sf-quick-ui-addons
+		sonic-pipewire
+		sf-quick-charts
+		sf-status-notification
+		sf-syntax-highlighting
+		sf-text-widgets
+		sf-text-editor
+		sf-user-feedback
+		sonic-exiv2-library
+		sonic-activities-stats
+		sf-barcode
+		sf-file-metadata
+		sf-file-search
+		sf-notification-settings
+		sf-unit-conversion
+		sf-networkmanager
+		sonic-system-monitor-library
+		sonic-plasma5-support-library
+		sf-runner
+		sonic-keybind-daemon
+		sonic-screen-library
+		sonic-night-light
+		sonic-win
+		sf-io-fuse
+		sonic-system-stats
+		sonic-qt-theme-bridge
+		sf-zeroconf
+		sf-io-extras
+		sonic-workspace
+		#??
+		sonic-screen
+		sonic-pulseaudio-library
+		sonic-audio-applet-pulse
+		sonic-desktop-interface
+		sonic-system-info
+		sonic-workspace-addons
+		xdg-desktop-portal-sonicde
+		sonicde-meta # meta
+		#
+		#sonic-activities # ← sf-cmake-modules (shortened to 'scfm')
+		#sonic-activities-stats # ← sfcm sf-settings
+		#sonic-activity-manager-daemon # ← sfcm sf-settings
+		#sf-data-models # ← sfcm
+		#sf-quick-ui # ← sfcm
+		#sonic-audio-applet-pulse # ← sfcm sf-data-models sf-quick-ui
+		#sonic-bluetooth-runtime # ← sfcm sf-quick-ui
+		#sf-silver-icons # ← sfcm
+		#sonic-breeze # ← sfcm sf-silver-icons
+		#sonic-breeze-sddm # ← sfcm
+		#sonic-browser-integration # ← sfcm
+		#sonic-crypto-library
+		#sonic-daemon # ← sfcm
+		#sonic-decoration # ← sfcm
+		#sonic-launcher-menu-edit # ← sfcm
+		#sonic-polkit-agent # ← sfcm
+		#sf-quick-desktop-style # ← sfcm
+		#sonic-desktop-interface # ← sf-quick-desktop-style sonic-launcher-menu-edit sonic-polkit-agent
+		#sonic-disks # ← sfcm
+		#sonic-dr-robotnik # ← sfcm sf-data-models sf-quick-ui
+		#sonic-drawing-tablet # ← sfcm
+		#sf-io-extras # ← sfcm sf-core-addons sf-doctools
+		#sonic-ecco # ← sfcm sf-io-extras
+		#sonic-exiv2-library # ← sfcm
+		#sonic-firewall # ← sfcm
+		#sf-addons-downloader # ← sfcm
+		#sf-app-info # ← sfcm
+		#sf-barcode # ← sfcm
+		#sf-bluetooth # ← sfcm
+		#sf-data-views # ← sfcm
+		#sf-device-integration # ← sfcm
+		#sf-feeds # ← sfcm
+		#sf-file-metadata # ← sfcm
+		#sf-holidays # ← sfcm
+		#sf-icon-themes # ← sfcm
+		#sf-idle-tracker # ← sfcm
+		#sf-image-formats # ← sfcm
+		#sf-io # ← sfcm
+		#sf-io-fuse # ← sfcm
+		#sf-keybind # ← sfcm
+		#sf-keyring # ← sfcm
+		#sf-keyring-pam # ← sfcm
+		#sf-modemmanager # ← sfcm
+		#sf-notifications # ← sfcm
+		#sf-open-collab # ← sfcm
+		#sf-package # ← sfcm sf-doctools
+		#sf-progress-ui # ← sfcm
+		#sf-pseudo-terminal # ← sfcm
+		#sf-qml-bridge # ← sfcm
+		#sf-purpose # ← sf-barcode sfcm sf-data-models sf-qml-bridge
+		#sf-qt-integration # ← sfcm
+		#sf-quick-charts # ← sfcm
+		#sf-quick-ui-addons # ← sfcm sf-core-addons sf-quick-desktop-style sf-quick-ui sf-settings
+		#sf-root-shell # ← sfcm
+		#sf-settings-utils # ← sfcm
+		#sf-spell-check # ← sfcm
+		#sf-sso
+		#sf-status-notification # ← sfcm
+		#sf-svg # ← sfcm
+		#sf-syntax-highlighting # ← sfcm
+		#sf-text-editor # ← sfcm
+		#sf-text-widgets # ← sfcm
+		#sf-ui-components # ← sfcm
+		#sf-user-feedback # ← sfcm
+		#sf-xml-gui # ← sfcm sf-settings
+		#sf-zeroconf # ← sfcm
+		#sonic-terminal-tools # ← sfcm
+		#sonic-gtk-theme-bridge # ← sfcm sonic-terminal-tools
+		#sonic-interface-libraries # ← sf-quick-ui sf-settings
+		#sonic-login-manager # ← sfcm
+		#sonic-network-manager # ← sf-barcode sfcm sf-quick-ui
+		#sonic-night-light # ← sfcm sf-settings
+		#sonic-oxygen # ← sfcm
+		#sonic-oxygen-icons # ← sfcm
+		#sonic-oxygen-sounds # ← sfcm
+		#sonic-partition-manager # ← sf-doctools sf-settings
+		#sonic-pipewire # ← sfcm
+		#sonic-pulseaudio-library # ← sfcm
+		#sonic-qt-accounts-library
+		#sonic-silver # ← sfcm sf-qt-integration sf-silver-icons
+		#sonic-qt-theme-bridge # ← sfcm sf-quick-desktop-style sonic-silver
+		#sonic-quick-image-editor # ← sfcm sf-settings
+		#sonic-rdp # ← sfcm
+		#sonic-screen # ← sfcm sf-image-formats
+		#sonic-screenies # ← sfcm
+		#sonic-screenlocker # ← sfcm
+		#sonic-silver-gtk # ← sfcm sonic-silver
+		#sonic-system-stats # ← sfcm sf-settings
+		#sonic-workspace # ← sonic-activity-manager-daemon sf-io-fuse sonic-qt-theme-bridge sonic-system-stats
+		#sonic-silver-sddm # ← sonic-workspace
+		#sonic-ssh-password-prompt # ← sfcm sf-doctools
+		#sonic-system-info # ← sfcm
+		#sonic-system-log # ← sfcm sf-core-addons sf-doctools sf-settings
+		#sonic-system-monitor # ← sfcm sf-package sf-quick-charts sf-quick-desktop-style sf-quick-ui sonic-system-stats
+		#sonic-terminal # ← sfcm
+		#sonic-thunderbolt # ← sfcm
+		#sonic-win # ← sf-quick-ui sonic-silver
+		#sonic-tv-interface # ← sonic-audio-applet-pulse sfcm sonic-network-manager sonic-screen sonic-terminal-tools sonic-win
+		#sonic-vault # ← sfcm
+		#sonic-workspace-addons # ← sfcm
+		#sonic-workspace-wallpapers # ← sfcm
+		#sonic-write-daemon # ← sfcm
+		#sonicde-meta
+		#xdg-desktop-portal-sonicde # ← sfcm sonic-workspace
 
-			#sf-cmake-modules
-			#sonic-activities # ← sf-cmake-modules (shortened to 'scfm')
-			#sf-settings # ← sfcm
-			#sonic-activities-stats # ← sfcm sf-settings
-			#sonic-activity-manager-daemon # ← sfcm sf-settings
-			#sf-data-models # ← sfcm
-			#sf-quick-ui # ← sfcm
-			#sonic-audio-applet-pulse # ← sfcm sf-data-models sf-quick-ui
-			#sonic-bluetooth-runtime # ← sfcm sf-quick-ui
-			#sf-silver-icons # ← sfcm
-			#sonic-breeze # ← sfcm sf-silver-icons
-			#sonic-breeze-sddm # ← sfcm
-			#sonic-browser-integration # ← sfcm
-			#sonic-crypto-library
-			#sonic-daemon # ← sfcm
-			#sonic-decoration # ← sfcm
-			#sonic-launcher-menu-edit # ← sfcm
-			#sonic-polkit-agent # ← sfcm
-			#sf-quick-desktop-style # ← sfcm
-			#sonic-desktop-interface # ← sf-quick-desktop-style sonic-launcher-menu-edit sonic-polkit-agent
-			#sonic-disks # ← sfcm
-			#sonic-dr-robotnik # ← sfcm sf-data-models sf-quick-ui
-			#sonic-drawing-tablet # ← sfcm
-			#sf-doctools # ← sfcm
-			#sf-core-addons # ← sfcm
-			#sf-io-extras # ← sfcm sf-core-addons sf-doctools
-			#sonic-ecco # ← sfcm sf-io-extras
-			#sonic-exiv2-library # ← sfcm
-			#sonic-firewall # ← sfcm
-			#sf-addons-downloader # ← sfcm
-			#sf-app-info # ← sfcm
-			#sf-archive # ← sfcm
-			#sf-auth # ← sfcm
-			#sf-autocomplete # ← sfcm sf-settings
-			#sf-barcode # ← sfcm
-			#sf-bluetooth # ← sfcm
-			#sf-bookmarks # ← sfcm sf-settings
-			#sf-color-scheme # ← sfcm
-			#sf-crash-handler # ← sfcm
-			#sf-data-views # ← sfcm
-			#sf-dbus # ← sfcm
-			#sf-device-integration # ← sfcm
-			#sf-feeds # ← sfcm
-			#sf-file-metadata # ← sfcm
-			#sf-file-search # ← sfcm
-			#sf-gui-addons # ← sfcm
-			#sf-holidays # ← sfcm
-			#sf-icon-themes # ← sfcm
-			#sf-idle-tracker # ← sfcm
-			#sf-image-formats # ← sfcm
-			#sf-internationalization # ← sfcm
-			#sf-io # ← sfcm
-			#sf-io-fuse # ← sfcm
-			#sf-keybind # ← sfcm
-			#sf-keyring # ← sfcm
-			#sf-keyring-pam # ← sfcm
-			#sf-modemmanager # ← sfcm
-			#sf-networkmanager # ← sfcm
-			#sf-notification-settings # ← sfcm
-			#sf-notifications # ← sfcm
-			#sf-open-collab # ← sfcm
-			#sf-package # ← sfcm sf-doctools
-			#sf-progress-ui # ← sfcm
-			#sf-pseudo-terminal # ← sfcm
-			#sf-qml-bridge # ← sfcm
-			#sf-purpose # ← sf-barcode sfcm sf-data-models sf-qml-bridge
-			#sf-qt-integration # ← sfcm
-			#sf-quick-charts # ← sfcm
-			#sf-quick-ui-addons # ← sfcm sf-core-addons sf-quick-desktop-style sf-quick-ui sf-settings
-			#sf-root-shell # ← sfcm
-			#sf-windowsystem # ← sfcm
-			#sf-runner # ← sfcm sf-core-addons sf-doctools sf-windowsystem
-			#sf-settings-ui # ← sfcm
-			#sf-settings-utils # ← sfcm
-			#sf-spell-check # ← sfcm
-			#sf-sso
-			#sf-status-notification # ← sfcm
-			#sf-svg # ← sfcm
-			#sf-syntax-highlighting # ← sfcm
-			#sf-text-codec # ← sfcm
-			#sf-text-editor # ← sfcm
-			#sf-text-widgets # ← sfcm
-			#sf-ui-components # ← sfcm
-			#sf-unit-conversion # ← sfcm
-			#sf-user-feedback # ← sfcm
-			#sf-widgets-addons # ← sfcm
-			#sf-xml-gui # ← sfcm sf-settings
-			#sf-zeroconf # ← sfcm
-			#sonic-terminal-tools # ← sfcm
-			#sonic-gtk-theme-bridge # ← sfcm sonic-terminal-tools
-			#sonic-interface-libraries # ← sf-quick-ui sf-settings
-			#sonic-keybind-daemon # ← sfcm sf-settings
-			#sonic-login-manager # ← sfcm
-			#sonic-network-manager # ← sf-barcode sfcm sf-quick-ui
-			#sonic-night-light # ← sfcm sf-settings
-			#sonic-oxygen # ← sfcm
-			#sonic-oxygen-icons # ← sfcm
-			#sonic-oxygen-sounds # ← sfcm
-			#sonic-partition-manager # ← sf-doctools sf-settings
-			#sonic-pipewire # ← sfcm
-			#sonic-plasma5-support-library # ← sfcm
-			#sonic-polkit
-			#sonic-pulseaudio-library # ← sfcm
-			#sonic-qt-accounts-library
-			#sonic-silver # ← sfcm sf-qt-integration sf-silver-icons
-			#sonic-qt-theme-bridge # ← sfcm sf-quick-desktop-style sonic-silver
-			#sonic-quick-image-editor # ← sfcm sf-settings
-			#sonic-rdp # ← sfcm
-			#sonic-screen # ← sfcm sf-image-formats
-			#sonic-screen-library # ← sfcm
-			#sonic-screenies # ← sfcm
-			#sonic-screenlocker # ← sfcm
-			#sonic-silver-gtk # ← sfcm sonic-silver
-			#sonic-system-stats # ← sfcm sf-settings
-			#sonic-workspace # ← sonic-activity-manager-daemon sf-io-fuse sonic-qt-theme-bridge sonic-system-stats
-			#sonic-silver-sddm # ← sonic-workspace
-			#sonic-ssh-password-prompt # ← sfcm sf-doctools
-			#sonic-system-info # ← sfcm
-			#sonic-system-log # ← sfcm sf-core-addons sf-doctools sf-settings
-			#sonic-system-monitor # ← sfcm sf-package sf-quick-charts sf-quick-desktop-style sf-quick-ui sonic-system-stats
-			#sonic-system-monitor-library # ← sfcm
-			#sonic-terminal # ← sfcm
-			#sonic-thunderbolt # ← sfcm
-			#sonic-win # ← sf-quick-ui sonic-silver
-			#sonic-tv-interface # ← sonic-audio-applet-pulse sfcm sonic-network-manager sonic-screen sonic-terminal-tools sonic-win
-			#sonic-vault # ← sfcm
-			#sonic-workspace-addons # ← sfcm
-			#sonic-workspace-wallpapers # ← sfcm
-			#sonic-write-daemon # ← sfcm
-			#sonicde-meta
-			#xdg-desktop-portal-sonicde # ← sfcm sonic-workspace
-		)
-		;;
-	xlibre)
-		shift
-		packageList=(
-			xlibre-xserver
-			xlibre-apps # meta
-			xlibre-xf86-input-elographics
-			xlibre-xf86-input-evdev
-			xlibre-xf86-input-joystick
-			xlibre-xf86-input-libinput
-			xlibre-xf86-input-synaptics
-			xlibre-xf86-input-vmmouse
-			xlibre-xf86-input-void
-			xlibre-xf86-input-wacom
-			xlibre-input-drivers # meta
-			xlibre-xf86-video-amdgpu
-			xlibre-xf86-video-ati
-			xlibre-xf86-video-cirrus
-			xlibre-xf86-video-dummy
-			xlibre-xf86-video-fbdev
-			xlibre-xf86-video-intel
-			xlibre-xf86-video-i128
-			xlibre-xf86-video-i740
-			xlibre-xf86-video-mach64
-			xlibre-xf86-video-mga
-			xlibre-xf86-video-nouveau
-			xlibre-xf86-video-nv
-			xlibre-xf86-video-openchrome
-			xlibre-xf86-video-qxl
-			xlibre-xf86-video-r128
-			xlibre-xf86-video-sisusb
-			xlibre-xf86-video-s3virge
-			xlibre-xf86-video-vesa
-			xlibre-xf86-video-vmware
-			xlibre-xf86-video-voodoo
-			xlibre-video-drivers # meta
-			xlibre-util-macros
-			xlibre-xorgproto
-			xlibre-minimal # meta
-			xlibre # meta
-		)
-		;;
-	xlibre-minimal)
-		shift
-		packageList=(
-			xlibre-xserver
-			xlibre-xf86-input-libinput
-			xlibre-xf86-input-evdev
-			xlibre-minimal # meta
-		)
-		;;
-	test)
-		shift
-		packageList=(
-			vpm
-		)
-		;;
-	*)
-		echo 'Pick group first:'
-		show_packs
-		exit 1
-		;;
+		#sf-cmake-modules
+		#sonic-activities # ← sf-cmake-modules (shortened to 'scfm')
+		#sf-settings # ← sfcm
+		#sonic-activities-stats # ← sfcm sf-settings
+		#sonic-activity-manager-daemon # ← sfcm sf-settings
+		#sf-data-models # ← sfcm
+		#sf-quick-ui # ← sfcm
+		#sonic-audio-applet-pulse # ← sfcm sf-data-models sf-quick-ui
+		#sonic-bluetooth-runtime # ← sfcm sf-quick-ui
+		#sf-silver-icons # ← sfcm
+		#sonic-breeze # ← sfcm sf-silver-icons
+		#sonic-breeze-sddm # ← sfcm
+		#sonic-browser-integration # ← sfcm
+		#sonic-crypto-library
+		#sonic-daemon # ← sfcm
+		#sonic-decoration # ← sfcm
+		#sonic-launcher-menu-edit # ← sfcm
+		#sonic-polkit-agent # ← sfcm
+		#sf-quick-desktop-style # ← sfcm
+		#sonic-desktop-interface # ← sf-quick-desktop-style sonic-launcher-menu-edit sonic-polkit-agent
+		#sonic-disks # ← sfcm
+		#sonic-dr-robotnik # ← sfcm sf-data-models sf-quick-ui
+		#sonic-drawing-tablet # ← sfcm
+		#sf-doctools # ← sfcm
+		#sf-core-addons # ← sfcm
+		#sf-io-extras # ← sfcm sf-core-addons sf-doctools
+		#sonic-ecco # ← sfcm sf-io-extras
+		#sonic-exiv2-library # ← sfcm
+		#sonic-firewall # ← sfcm
+		#sf-addons-downloader # ← sfcm
+		#sf-app-info # ← sfcm
+		#sf-archive # ← sfcm
+		#sf-auth # ← sfcm
+		#sf-autocomplete # ← sfcm sf-settings
+		#sf-barcode # ← sfcm
+		#sf-bluetooth # ← sfcm
+		#sf-bookmarks # ← sfcm sf-settings
+		#sf-color-scheme # ← sfcm
+		#sf-crash-handler # ← sfcm
+		#sf-data-views # ← sfcm
+		#sf-dbus # ← sfcm
+		#sf-device-integration # ← sfcm
+		#sf-feeds # ← sfcm
+		#sf-file-metadata # ← sfcm
+		#sf-file-search # ← sfcm
+		#sf-gui-addons # ← sfcm
+		#sf-holidays # ← sfcm
+		#sf-icon-themes # ← sfcm
+		#sf-idle-tracker # ← sfcm
+		#sf-image-formats # ← sfcm
+		#sf-internationalization # ← sfcm
+		#sf-io # ← sfcm
+		#sf-io-fuse # ← sfcm
+		#sf-keybind # ← sfcm
+		#sf-keyring # ← sfcm
+		#sf-keyring-pam # ← sfcm
+		#sf-modemmanager # ← sfcm
+		#sf-networkmanager # ← sfcm
+		#sf-notification-settings # ← sfcm
+		#sf-notifications # ← sfcm
+		#sf-open-collab # ← sfcm
+		#sf-package # ← sfcm sf-doctools
+		#sf-progress-ui # ← sfcm
+		#sf-pseudo-terminal # ← sfcm
+		#sf-qml-bridge # ← sfcm
+		#sf-purpose # ← sf-barcode sfcm sf-data-models sf-qml-bridge
+		#sf-qt-integration # ← sfcm
+		#sf-quick-charts # ← sfcm
+		#sf-quick-ui-addons # ← sfcm sf-core-addons sf-quick-desktop-style sf-quick-ui sf-settings
+		#sf-root-shell # ← sfcm
+		#sf-windowsystem # ← sfcm
+		#sf-runner # ← sfcm sf-core-addons sf-doctools sf-windowsystem
+		#sf-settings-ui # ← sfcm
+		#sf-settings-utils # ← sfcm
+		#sf-spell-check # ← sfcm
+		#sf-sso
+		#sf-status-notification # ← sfcm
+		#sf-svg # ← sfcm
+		#sf-syntax-highlighting # ← sfcm
+		#sf-text-codec # ← sfcm
+		#sf-text-editor # ← sfcm
+		#sf-text-widgets # ← sfcm
+		#sf-ui-components # ← sfcm
+		#sf-unit-conversion # ← sfcm
+		#sf-user-feedback # ← sfcm
+		#sf-widgets-addons # ← sfcm
+		#sf-xml-gui # ← sfcm sf-settings
+		#sf-zeroconf # ← sfcm
+		#sonic-terminal-tools # ← sfcm
+		#sonic-gtk-theme-bridge # ← sfcm sonic-terminal-tools
+		#sonic-interface-libraries # ← sf-quick-ui sf-settings
+		#sonic-keybind-daemon # ← sfcm sf-settings
+		#sonic-login-manager # ← sfcm
+		#sonic-network-manager # ← sf-barcode sfcm sf-quick-ui
+		#sonic-night-light # ← sfcm sf-settings
+		#sonic-oxygen # ← sfcm
+		#sonic-oxygen-icons # ← sfcm
+		#sonic-oxygen-sounds # ← sfcm
+		#sonic-partition-manager # ← sf-doctools sf-settings
+		#sonic-pipewire # ← sfcm
+		#sonic-plasma5-support-library # ← sfcm
+		#sonic-polkit
+		#sonic-pulseaudio-library # ← sfcm
+		#sonic-qt-accounts-library
+		#sonic-silver # ← sfcm sf-qt-integration sf-silver-icons
+		#sonic-qt-theme-bridge # ← sfcm sf-quick-desktop-style sonic-silver
+		#sonic-quick-image-editor # ← sfcm sf-settings
+		#sonic-rdp # ← sfcm
+		#sonic-screen # ← sfcm sf-image-formats
+		#sonic-screen-library # ← sfcm
+		#sonic-screenies # ← sfcm
+		#sonic-screenlocker # ← sfcm
+		#sonic-silver-gtk # ← sfcm sonic-silver
+		#sonic-system-stats # ← sfcm sf-settings
+		#sonic-workspace # ← sonic-activity-manager-daemon sf-io-fuse sonic-qt-theme-bridge sonic-system-stats
+		#sonic-silver-sddm # ← sonic-workspace
+		#sonic-ssh-password-prompt # ← sfcm sf-doctools
+		#sonic-system-info # ← sfcm
+		#sonic-system-log # ← sfcm sf-core-addons sf-doctools sf-settings
+		#sonic-system-monitor # ← sfcm sf-package sf-quick-charts sf-quick-desktop-style sf-quick-ui sonic-system-stats
+		#sonic-system-monitor-library # ← sfcm
+		#sonic-terminal # ← sfcm
+		#sonic-thunderbolt # ← sfcm
+		#sonic-win # ← sf-quick-ui sonic-silver
+		#sonic-tv-interface # ← sonic-audio-applet-pulse sfcm sonic-network-manager sonic-screen sonic-terminal-tools sonic-win
+		#sonic-vault # ← sfcm
+		#sonic-workspace-addons # ← sfcm
+		#sonic-workspace-wallpapers # ← sfcm
+		#sonic-write-daemon # ← sfcm
+		#sonicde-meta
+		#xdg-desktop-portal-sonicde # ← sfcm sonic-workspace
+	)
+	;;
+xlibre)
+	shift
+	packageList=(
+		xlibre-xserver
+		xlibre-apps # meta
+		xlibre-xf86-input-elographics
+		xlibre-xf86-input-evdev
+		xlibre-xf86-input-joystick
+		xlibre-xf86-input-libinput
+		xlibre-xf86-input-synaptics
+		xlibre-xf86-input-vmmouse
+		xlibre-xf86-input-void
+		xlibre-xf86-input-wacom
+		xlibre-input-drivers # meta
+		xlibre-xf86-video-amdgpu
+		xlibre-xf86-video-ati
+		xlibre-xf86-video-cirrus
+		xlibre-xf86-video-dummy
+		xlibre-xf86-video-fbdev
+		xlibre-xf86-video-intel
+		xlibre-xf86-video-i128
+		xlibre-xf86-video-i740
+		xlibre-xf86-video-mach64
+		xlibre-xf86-video-mga
+		xlibre-xf86-video-nouveau
+		xlibre-xf86-video-nv
+		xlibre-xf86-video-openchrome
+		xlibre-xf86-video-qxl
+		xlibre-xf86-video-r128
+		xlibre-xf86-video-sisusb
+		xlibre-xf86-video-s3virge
+		xlibre-xf86-video-vesa
+		xlibre-xf86-video-vmware
+		xlibre-xf86-video-voodoo
+		xlibre-video-drivers # meta
+		xlibre-util-macros
+		xlibre-xorgproto
+		xlibre-minimal # meta
+		xlibre         # meta
+	)
+	;;
+xlibre-minimal)
+	shift
+	packageList=(
+		xlibre-xserver
+		xlibre-xf86-input-libinput
+		xlibre-xf86-input-evdev
+		xlibre-minimal # meta
+	)
+	;;
+test)
+	shift
+	packageList=(
+		vpm
+	)
+	;;
+*)
+	echo 'Pick group first:'
+	show_packs
+	exit 1
+	;;
 esac
 
-if [ -z "$1" ]; then
-	echo 'Provide second argument!'
+if [ $# -eq 0 ]; then
+	echo 'Provide at least one action argument!'
 	_help
 	exit 1
 fi
@@ -1075,54 +1073,66 @@ fi
 # Use own masterdir per group
 export XBPS_MASTERDIR="${XBPS_DISTDIR}/masterdir_${group}"
 
-if [ "$1" = l ] || [ "$1" = '--lint' ]; then
-	shift
-	_lint
-fi
-if [ "$1" = b ] || [ "$1" = '--build' ]; then
-	shift
-	build=1
-fi
-if [ "$1" = o ] || [ "$1" = '--order' ]; then
-	shift
-	_show_order
-fi
-if [ "$1" = r ] || [ "$1" = '--record-order' ]; then
-	shift
-	recordOrder=1
-fi
-if [ "$1" = u ] || [ "$1" = '--bump' ]; then
-	shift
-	_bump
-elif [ "$build" = 1 ]; then
-	_build
-fi
-if [ "$1" = i ] || [ "$1" = '--install' ]; then
-	shift
-	_install
-fi
-if [ "$1" = c ] || [ "$1" = '--copy' ]; then
-	shift
-	_copy
-fi
-if [ "$1" = adopt ] || [ "$1" = '--adopt' ]; then
-	shift
-	_adopt
-fi
-if [ "$1" = orphan ] || [ "$1" = '--orphan' ]; then
-	shift
-	_orphan
-fi
-if [ "$1" = a ] || [ "$1" = '--all' ]; then
-	shift
-	build=1
-	_lint
-	_bump
-	_install
-	_copy
-	_g "Everything done"
-fi
-if [ -n "$1" ]; then
-	echo 'Another argument?'
-	exit 1
-fi
+# Allow combining multiple actions, e.g.:
+#   ./bump.sh <group> bump lint build order
+# Global flags are collected in a first pass so they apply to every action
+# regardless of argument order.
+build=0
+recordOrder=0
+declare -a _actions=()
+for _arg in "$@"; do
+	case "$_arg" in
+	l|--lint) _actions+=("lint") ;;
+	b|--build)
+		_actions+=("build")
+		build=1
+		;;
+	o|--order) _actions+=("order") ;;
+	r|--record-order)
+		_actions+=("record")
+		recordOrder=1
+		;;
+	u|--bump) _actions+=("bump") ;;
+	i|--install) _actions+=("install") ;;
+	c|--copy) _actions+=("copy") ;;
+	adopt|--adopt) _actions+=("adopt") ;;
+	orphan|--orphan) _actions+=("orphan") ;;
+	a|--all)
+		_actions+=("all")
+		build=1
+		;;
+	h|--help)
+		_help
+		exit 0
+		;;
+	*)
+		echo "Unknown argument: $_arg"
+		_help
+		exit 1
+		;;
+	esac
+done
+
+for _action in "${_actions[@]}"; do
+	case "$_action" in
+	lint) _lint ;;
+	build) _build ;;
+	order) _show_order ;;
+	record) : ;;
+	bump) _bump ;;
+	install) _install ;;
+	copy) _copy ;;
+	adopt) _adopt ;;
+	orphan) _orphan ;;
+	all)
+		build=1
+		_lint
+		_bump
+		_install
+		_copy
+		_g "Everything done"
+		;;
+	esac
+done
+
+_summary
