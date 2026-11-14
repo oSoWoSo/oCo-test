@@ -129,16 +129,16 @@ jobs:
       - name: Build args and run bump.sh
         env:
           sourceDir: ${{ steps.paths.outputs.sourceDir }}
-          destinationDir: ${{ steps.paths.outputs.destinationDir }}
+        shell: bash
         run: |
           set -euo pipefail
           args=("${{ inputs.group }}")
-          [ "${{ inputs.bump }}" = "true" ] && args+=(--bump)
-          [ "${{ inputs.lint }}" = "true" ] && args+=(--lint)
-          [ "${{ inputs.build }}" = "true" ] && args+=(--build)
-          [ "${{ inputs.copy }}" = "true" ] && args+=(--copy)
-          [ "${{ inputs.order }}" = "true" ] && args+=(--order)
-          [ "${{ inputs.record_order }}" = "true" ] && args+=(--record-order)
+          if [ "${{ inputs.bump }}" = "true" ]; then args+=(--bump); fi
+          if [ "${{ inputs.lint }}" = "true" ]; then args+=(--lint); fi
+          if [ "${{ inputs.build }}" = "true" ]; then args+=(--build); fi
+          if [ "${{ inputs.copy }}" = "true" ]; then args+=(--copy); fi
+          if [ "${{ inputs.order }}" = "true" ]; then args+=(--order); fi
+          if [ "${{ inputs.record_order }}" = "true" ]; then args+=(--record-order); fi
           if [ -n "${{ inputs.extra_args }}" ]; then
             read -ra extra <<< "${{ inputs.extra_args }}"
             args+=("${extra[@]}")
@@ -146,7 +146,7 @@ jobs:
           printf 'Running: ./bump.sh %s\n' "${args[*]}"
           ./bump.sh "${args[@]}"
 
-      - name: Commit and push changes
+        shell: bash
         run: |
           set -euo pipefail
           git add -A
