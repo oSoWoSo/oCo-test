@@ -111,7 +111,7 @@ jobs:
           git config --global --add safe.directory '*'
 
       - name: Merge templates into void-packages
-        run: bash .github/scripts/ci/build-merge-templates.sh
+        run: bash "${GITHUB_WORKSPACE}/extra/.github/scripts/ci/build-merge-templates.sh"
         working-directory: ${{ github.workspace }}
 
       - name: Resolve paths
