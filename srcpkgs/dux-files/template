@@ -15,7 +15,7 @@ maintainer="zenobit <zen@osowoso.org>"
 license="MIT"
 homepage="https://github.com/duxlabs-dev/dux-files"
 changelog="https://github.com/duxlabs-dev/dux-files/releases"
-distfiles="https://github.com/duxlabs-dev/dux-files/archive/refs/tags/v${version}.tar.gz>dux-files.tar.gz"
+distfiles="https://github.com/duxlabs-dev/dux-files/archive/refs/tags/v${version}.tar.gz"
 checksum=400c2f2fb3b88ae793535f81ca1e528686814991a7096a74c28488842280534c
 
 pre_check() {
