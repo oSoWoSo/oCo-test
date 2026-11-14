@@ -126,6 +126,19 @@ jobs:
             exit 1
           fi
 
+      - name: Ensure xxautobump
+        shell: bash
+        run: |
+          if command -v xxautobump >/dev/null 2>&1; then
+            echo "xxautobump already available"
+            exit 0
+          fi
+          tmp=$(mktemp -d)
+          curl -fsSL https://github.com/Piraty/xxtools/archive/refs/heads/master.tar.gz -o "$tmp/xxtools.tar.gz"
+          tar -xzf "$tmp/xxtools.tar.gz" -C "$tmp"
+          install -m 0755 "$tmp"/xxtools-*/xxautobump /usr/local/bin/xxautobump
+          rm -rf "$tmp"
+
       - name: Build args and run bump.sh
         env:
           sourceDir: ${{ steps.paths.outputs.sourceDir }}
